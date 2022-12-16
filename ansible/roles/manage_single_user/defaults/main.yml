@@ -1,0 +1,4 @@
+state: present
+remove: false
+users_home: /home
+users_group: users
