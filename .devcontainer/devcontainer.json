@@ -1,0 +1,18 @@
+// .devcontainer/devcontainer.json
+{
+    "name": "automate",
+    "dockerFile": "Dockerfile",
+    "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-azuretools.vscode-docker",
+                "redhat.ansible",
+                "esbenp.prettier-vscode"
+            ]
+        }
+    },
+    "remoteUser": "bouncmpe"
+}
