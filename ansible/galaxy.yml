@@ -1,7 +1,7 @@
 namespace: bouncmpe
-name: automate
+name: automated
 description: ""
-repository: "https://github.com/bouncmpe/ansible-collection"
+repository: "https://github.com/bouncmpe/automated"
 version: 0.1.0
 readme: README.md
 authors:

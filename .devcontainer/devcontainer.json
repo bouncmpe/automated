@@ -1,6 +1,6 @@
 // .devcontainer/devcontainer.json
 {
-    "name": "automate",
+    "name": "automated",
     "dockerFile": "Dockerfile",
     "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"

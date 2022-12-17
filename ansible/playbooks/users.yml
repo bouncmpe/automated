@@ -3,4 +3,4 @@
   hosts: localhost
   become: true
   roles:
-    - bouncmpe.automate.manage_users
+    - bouncmpe.automated.manage_users
