@@ -1,7 +1,8 @@
-- name: Ensure cluster-user group exists
+- name: Manage usergroups
   ansible.builtin.group:
-    name: "{{ users_group }}"
+    name: "{{ item }}"
     state: present
+  loop: "{{ usergroups }}"
 
 - name: Manage users
   ansible.builtin.include_role:
