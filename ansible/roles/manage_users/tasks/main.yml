@@ -6,7 +6,7 @@
 
 - name: Manage users
   ansible.builtin.include_role:
-    name: bouncmpe.automate.manage_single_user
+    name: bouncmpe.automated.manage_single_user
   vars:
     username: "{{ item.name }}"
     usergroups: "{{ item.groups | default(users_group) }}"
