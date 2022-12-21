@@ -5,12 +5,8 @@
   loop: "{{ usergroups }}"
 
 - name: Manage users
-  ansible.builtin.include_role:
-    name: bouncmpe.automated.manage_single_user
-  vars:
-    username: "{{ item.name }}"
-    usergroups: "{{ item.groups | default(users_group) }}"
-    state: "{{ item.state | default('present') }}"
-    remove: "{{ item.remove | default(false) }}"
-    ssh_import_id: "{{ item.ssh_import_id }}"
+  ansible.builtin.include_tasks:
+    file: single_user.yml
   loop: "{{ users }}"
+  loop_control:
+    loop_var: user
