@@ -5,27 +5,27 @@
 - name: Ensure primary user group exists
   ansible.builtin.group:
     name: "{{ user.primary_group | default(user.name) }}"
-    state: "{{ user.state | default('present') }}"
+    state: "{{ user.state | default(default_user_state) }}"
 
 - name: Manage the user {{ user.name }}
   ansible.builtin.user:
     name: "{{ user.name }}"
     home: "{{ users_directory }}/{{ user.name }}"
     group: "{{ user.primary_group | default(user.name) }}"
-    groups: "{{ user.groups }}"
-    state: "{{ user.state | default('present') }}"
-    remove: "{{ user.remove | default(false) }}"
+    groups: "{{ user.groups | default(default_user_groups) }}"
+    state: "{{ user.state | default(default_user_state) }}"
+    remove: "{{ user.remove | default(default_user_remove) }}"
     append: false
     generate_ssh_key: true
     ssh_key_type: "ed25519"
     ssh_key_file: ".ssh/id_ed25519"
     password_lock: true
-    create_home: true
+    create_home: "{{ user.create_home | default(default_user_create_home) }}"
 
 - name: Manage the public SSH keys on GitHub server for {{ user.name }}
   ansible.posix.authorized_key:
     user: "{{ user.name }}"
-    state: "{{ user.state | default('present') }}"
+    state: "{{ user.state | default(default_user_state) }}"
     key: https://github.com/{{ github_id }}.keys
   loop: "{{ user.ssh_import_id | map('regex_replace', '^gh:(.*)$', '\\1') | list }}"
   when: user.ssh_import_id is defined

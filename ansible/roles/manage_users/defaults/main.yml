@@ -1,1 +1,5 @@
 users_directory: /home
+default_user_state: present
+default_user_remove: false
+default_user_create_home: true
+default_user_groups: []
