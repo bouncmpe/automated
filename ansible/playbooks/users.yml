@@ -1,6 +1,0 @@
----
-- name: Add and manage users on hosts
-  hosts: localhost
-  become: true
-  roles:
-    - bouncmpe.automated.manage_users

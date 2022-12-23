@@ -1,0 +1,16 @@
+---
+- name: Harden ssh configuration
+  hosts: all
+
+  tasks:
+    - name: Install OpenSSH
+      ansible.builtin.package:
+        name:
+          - openssh-client
+          - openssh-server
+
+    - name: Harden SSH configuration
+      ansible.builtin.include_role:
+        name: devsec.hardening.ssh_hardening
+      vars:
+        sshd_authenticationmethods: publickey
