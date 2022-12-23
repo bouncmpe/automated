@@ -21,6 +21,7 @@
     ssh_key_file: ".ssh/id_ed25519"
     password_lock: true
     create_home: "{{ user.create_home | default(default_user_create_home) }}"
+    shell: "{{ user.shell | default(default_user_shell) }}"
 
 - name: Manage the public SSH keys on GitHub server for {{ user.name }}
   ansible.posix.authorized_key:
