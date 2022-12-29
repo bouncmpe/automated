@@ -6,3 +6,5 @@ version: 0.1.0
 readme: README.md
 authors:
   - Dogan Ulus <dogan.ulus@boun.edu.tr>
+dependencies:
+  devsec.hardening: ">=8.0.0"

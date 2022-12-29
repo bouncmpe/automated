@@ -1,13 +1,16 @@
 ---
 - name: Harden ssh configuration
-  hosts: all
+  hosts: localhost
 
   tasks:
-    - name: Install OpenSSH
-      ansible.builtin.package:
-        name:
-          - openssh-client
-          - openssh-server
+    - name: Ensure the sshd privilege separation directory exists
+      become: true
+      ansible.builtin.file:
+        path: "/run/sshd"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
 
     - name: Harden SSH configuration
       ansible.builtin.include_role:
