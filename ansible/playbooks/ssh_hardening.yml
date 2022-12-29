@@ -1,6 +1,6 @@
 ---
 - name: Harden ssh configuration
-  hosts: localhost
+  hosts: all
 
   tasks:
     - name: Ensure the sshd privilege separation directory exists
