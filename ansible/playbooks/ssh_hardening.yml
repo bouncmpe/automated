@@ -16,4 +16,5 @@
       ansible.builtin.include_role:
         name: devsec.hardening.ssh_hardening
       vars:
+        ssh_x11_forwarding: true
         sshd_authenticationmethods: publickey
