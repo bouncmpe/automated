@@ -17,4 +17,5 @@
         name: devsec.hardening.ssh_hardening
       vars:
         ssh_x11_forwarding: true
+        ssh_allow_tcp_forwarding: true
         sshd_authenticationmethods: publickey
