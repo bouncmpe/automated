@@ -18,4 +18,5 @@
       vars:
         ssh_x11_forwarding: true
         ssh_allow_tcp_forwarding: true
+        ssh_allow_agent_forwarding: true
         sshd_authenticationmethods: publickey
