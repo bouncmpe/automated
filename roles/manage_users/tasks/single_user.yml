@@ -1,0 +1,34 @@
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/user_module.html
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/group_module.html
+# https://docs.ansible.com/ansible/latest/collections/ansible/posix/authorized_key_module.html
+---
+- name: Ensure primary user group exists
+  ansible.builtin.group:
+    name: "{{ user.primary_group | default(user.name) }}"
+    state: "{{ user.state | default(default_user_state) }}"
+
+- name: Manage the user {{ user.name }}
+  ansible.builtin.user:
+    name: "{{ user.name }}"
+    home: "{{ users_directory }}/{{ user.name }}"
+    group: "{{ user.primary_group | default(user.name) }}"
+    groups: "{{ user.groups | default(default_user_groups) }}"
+    state: "{{ user.state | default(default_user_state) }}"
+    remove: "{{ user.remove | default(default_user_remove) }}"
+    append: false
+    generate_ssh_key: true
+    ssh_key_type: "ed25519"
+    ssh_key_file: ".ssh/id_ed25519"
+    password_lock: true
+    create_home: "{{ user.create_home | default(default_user_create_home) }}"
+    shell: "{{ user.shell | default(default_user_shell) }}"
+
+- name: Manage the public SSH keys on GitHub server for {{ user.name }}
+  ansible.posix.authorized_key:
+    user: "{{ user.name }}"
+    state: "{{ user.state | default(default_user_state) }}"
+    key: https://github.com/{{ github_id }}.keys
+  loop: "{{ user.ssh_import_id | map('regex_replace', '^gh:(.*)$', '\\1') | list }}"
+  when: user.ssh_import_id is defined
+  loop_control:
+    loop_var: github_id

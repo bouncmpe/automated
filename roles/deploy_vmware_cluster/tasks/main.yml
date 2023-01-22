@@ -1,0 +1,40 @@
+- name: Ensure cluster folder present
+  community.vmware.vcenter_folder:
+    datacenter_name: "{{ vcenter_datacenter }}"
+    folder_name: "{{ vm_cluster_name }}"
+    folder_type: vm
+    state: present
+  delegate_to: localhost
+
+- name: Create cluster machines
+  community.vmware.vmware_guest:
+    datacenter: "{{ vcenter_datacenter }}"
+    cluster: "{{ vcenter_cluster }}"
+    folder: "{{ vm_cluster_name }}"
+    name: "{{ item.name }}"
+    template: "{{ item.template | default(default_vm_template) }}"
+    guest_id: "{{ item.guest_id | default(default_vm_guest_id) }}"
+    state: powered-on
+    disk:
+      - datastore: "{{ vcenter_datastore }}"
+        size_gb: "{{ item.disk_size_gb | default(default_vm_disk_size_gb) }}"
+    hardware:
+      memory_mb: "{{ item.memory_mb | default(default_vm_memory_mb) }}"
+      num_cpus: "{{ item.num_cpus | default(default_vm_num_cpus) }}"
+    customization:
+      dns_servers: "{{ vm_cluster_nameservers | default(omit) }}"
+      domain: "{{ vm_cluster_domain | default(omit) }}"
+      timezone: "{{ vm_cluster_timezone | default(omit) }}"
+    networks:
+      - name: "{{ vcenter_network_name }}"
+        netmask: "{{ vm_cluster_network_netmask }}"
+        gateway: "{{ vm_cluster_network_gateway }}"
+        ip: "{{ item.address }}"
+    vapp_properties:
+      - id: instance-id
+        value: "{{ item.name }}"
+      - id: hostname
+        value: "{{ item.name }}"
+      - id: "user-data"
+        value: "{{ lookup('file', vm_cloud_init_userdata_file) | b64encode }}"
+  loop: "{{ vm_cluster_machines }}"

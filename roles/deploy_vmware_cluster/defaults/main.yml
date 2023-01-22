@@ -1,0 +1,6 @@
+default_vm_num_cpus: 2
+default_vm_memory_mb: 4096
+default_vm_disk_size_gb: 16
+default_vm_template: ubuntu-22.04-server-template
+default_vm_guest_id: ubuntu64Guest
+vcenter_validate_certs: false

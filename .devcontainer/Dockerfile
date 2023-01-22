@@ -20,5 +20,7 @@ RUN groupadd bouncmpe -g 1000 \
 USER bouncmpe
 WORKDIR /home/bouncmpe
 
+RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install --user ansible ansible-lint
+RUN python3 -m pip install --upgrade git+https://github.com/vmware/vsphere-automation-sdk-python.git
 ENV PATH=$HOME/.local/bin:$PATH

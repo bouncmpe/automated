@@ -8,9 +8,9 @@
     "customizations": {
         "vscode": {
             "extensions": [
+                "ms-python.python",
                 "ms-azuretools.vscode-docker",
-                "redhat.ansible",
-                "esbenp.prettier-vscode"
+                "redhat.ansible"
             ]
         }
     },

@@ -4,6 +4,6 @@
 # Use: ansible-galaxy install -r requirements.yml --force
 
 collections:
-  - source: ./ansible
+  - name: community.vmware
+  - source: .
     type: dir
-  - name: devsec.hardening
