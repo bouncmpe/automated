@@ -5,7 +5,7 @@
 - name: Ensure primary user group exists
   ansible.builtin.group:
     name: "{{ user.primary_group | default(user.name) }}"
-    state: "{{ user.state | default(default_user_state) }}"
+    state: present
 
 - name: Manage the user {{ user.name }}
   ansible.builtin.user:
