@@ -1,0 +1,9 @@
+---
+- name: Deploy cluster on VMware vSphere
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Deploy virtual machines
+      ansible.builtin.include_role:
+        name: bouncmpe.automated.deploy_vmware_cluster

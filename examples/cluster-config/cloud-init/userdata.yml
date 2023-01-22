@@ -1,0 +1,12 @@
+#cloud-config
+package_update: true
+packages:
+  - gitz
+
+users:
+  - name: bouncmpe
+    plain_text_passwd: abc123
+    lock_passwd: false
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    groups: sudo
+    shell: /bin/bash
