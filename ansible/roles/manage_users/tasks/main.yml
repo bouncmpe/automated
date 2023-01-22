@@ -10,3 +10,8 @@
   loop: "{{ users }}"
   loop_control:
     loop_var: user
+
+- name: Determine existing users
+  shell: 'grep users /etc/group | cut -d: -f4 | tr "," "\n"'
+  changed_when: false
+  register: existing_users
