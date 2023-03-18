@@ -1,12 +1,21 @@
 #cloud-config
 package_update: true
 packages:
-  - gitz
+  - git
+  - cron
 
 users:
-  - name: bouncmpe
-    plain_text_passwd: abc123
+  - name: local_admin
+    passwd: $6$rounds=4096$Qtx7ihKggIa$Qv4vT91F6bdAt78hYoGsA4R215dDjIBZgRw7wkC5mkrXvdjnZ7DgT7lKKsolz9it7c1xVOJPmUpn3SzaWG3Zi.
+    system: true
     lock_passwd: false
-    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_redirect_user: true
+    groups: sudo
+    shell: /bin/bash
+
+  - name: bouncmpe
+    lock_passwd: true
+    ssh_import_id: 
+      - gh:doganulus
     groups: sudo
     shell: /bin/bash
