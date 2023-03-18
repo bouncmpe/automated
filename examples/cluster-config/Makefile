@@ -8,4 +8,4 @@ destroy:
 	ansible-playbook destroy.yml
 
 users:
-	ansible-playbook users.yml -i hosts -u bouncmpe
+	ansible-playbook users.yml -i inventory -u bouncmpe
