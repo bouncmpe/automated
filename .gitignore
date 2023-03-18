@@ -1,2 +1,2 @@
 *.example
-*.secret.env
+**/*.secret.env
