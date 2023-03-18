@@ -9,6 +9,3 @@ destroy:
 
 users:
 	ansible-playbook users.yml -i hosts
-
-vcenter-credentials:
-	source vcenter.secret.env
