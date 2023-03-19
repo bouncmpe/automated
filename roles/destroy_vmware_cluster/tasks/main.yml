@@ -1,7 +1,6 @@
 - name: Gather all VMs from the cluster folder
   community.vmware.vmware_vm_info:
     folder: "{{ vcenter_datacenter }}/vm/{{ vm_cluster_name }}"
-  delegate_to: localhost
   register: vm_info
 
 - name: Power-off all machines gathered
@@ -22,4 +21,3 @@
     folder_name: "{{ vm_cluster_name }}"
     folder_type: vm
     state: absent
-  delegate_to: localhost
