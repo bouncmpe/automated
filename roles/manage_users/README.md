@@ -27,8 +27,8 @@
             nopassword: true # no password for sudo
 
         - name: dulus
-          password_lock: false # not recommended
-          password: <my hashed password> # not recommended
+          lock_passwd: false # not recommended
+          passwd: <my hashed password> # not recommended
           sudoers:
             commands:
               - /usr/bin/ls # allow: sudo ls
