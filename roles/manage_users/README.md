@@ -1,36 +1,12 @@
 # bouncmpe.automated.manage_users
 
-## Requirements
-
-None.
-
-## Role Variables
-
-```yaml
-# List of user groups to be created
-usergroups: []
-# List of users to be created/managed
-users: []
-```
-
-## Default Variables
-
-```yaml
-default_user_directory: /home
-default_user_state: present
-default_user_remove: false
-default_user_create_home: true
-default_user_groups: []
-default_user_shell: /bin/bash
-```
-
 ## Example Playbook
 
 ```yaml
 # users.yml
 ---
-- name: Add and manage users on hosts
-  hosts: localhost
+- name: Manage users on all hosts
+  hosts: all
   become: true
 
   roles:
@@ -38,19 +14,24 @@ default_user_shell: /bin/bash
 
   # Describe usergroups and users in the following
   vars:
-    usergroups: ["sudo", "users"] # List of user group names
-    users:
-      - name: dogan.ulus
-        groups: ["sudo", "users"]
-        ssh_import_id:
-          - gh:doganulus
+    config:
+      groups: ["sudo", "faculty"]
+      users:
+        - name: dogan.ulus
+          groups: ["sudo", "faculty"]
+          ssh_import_id:
+            - gh:doganulus # get public ssh keys from https://github.com/doganulus.keys
+          ssh_authorized_keys:
+            - <my public ssh key>
+          sudoers:
+            nopassword: true # no password for sudo
 
-      - name: dulus
-        groups: ["users"]
-        ssh_import_id:
-          - gh:doganulus
+        - name: dulus
+          password_lock: false # not recommended
+          password: <my hashed password> # not recommended
+          sudoers:
+            commands:
+              - /usr/bin/ls # allow: sudo ls
+              - /usr/bin/cat # allow: sudo cat
+            nopassword: false # require password for sudo
 ```
-
-## Dependencies
-
-None.
