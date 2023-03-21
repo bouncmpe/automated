@@ -2,11 +2,11 @@
   ansible.builtin.group:
     name: "{{ item }}"
     state: present
-  loop: "{{ usergroups }}"
+  loop: "{{ config.groups }}"
 
 - name: Manage users
   ansible.builtin.include_tasks:
     file: single_user.yml
-  loop: "{{ users }}"
+  loop: "{{ config.users }}"
   loop_control:
     loop_var: user

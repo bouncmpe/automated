@@ -1,5 +1,5 @@
 ---
-- name: Add and manage users on hosts
+- name: Manage users on all hosts
   hosts: all
   become: true
 
@@ -7,14 +7,36 @@
     - bouncmpe.automated.manage_users
 
   vars:
-    usergroups: ["sudo", "users"]
-    users:
-      - name: dulus1
-        groups: ["sudo", "users"]
-        ssh_import_id:
-          - gh:doganulus
+    config:
+      groups: [
+        "sudo", "slurm-admin",
+        "faculty", "graduate", "senior",
+        "bounllm", "bounverif"
+      ]
+      users:
+        - name: dogan.ulus
+          groups: ["sudo", "faculty"]
+          ssh_import_id:
+            - gh:doganulus
+          sudoers:
+            nopassword: true
 
-      - name: dulus2
-        groups: ["users"]
-        ssh_import_id:
-          - gh:doganulus
+        - name: birkan.yilmaz
+          groups: ["faculty"]
+          ssh_import_id:
+            - gh:birkany
+
+        - name: ozgovde
+          groups: ["faculty"]
+          ssh_import_id:
+            - gh:ozgovde
+
+        - name: furkan.akkurt
+          groups: ["graduate", "slurm-admin", "bounllm"]
+          ssh_import_id:
+            - gh:furkanakkurt1335
+
+        - name: doruk.tiktiklar
+          groups: ["graduate", "slurm-admin", "bounverif"]
+          ssh_import_id:
+            - gh:doruktiktiklar

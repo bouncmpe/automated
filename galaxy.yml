@@ -2,9 +2,10 @@ namespace: bouncmpe
 name: automated
 description: ""
 repository: "https://github.com/bouncmpe/automated"
-version: 0.5.0
+version: 0.6.0
 readme: README.md
 authors:
   - Dogan Ulus <dogan.ulus@boun.edu.tr>
 dependencies:
   community.vmware: ">=3.0.0"
+  community.general: ">=6.0.0"

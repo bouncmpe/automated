@@ -4,6 +4,7 @@
 # Use: ansible-galaxy install -r requirements.yml --force
 
 collections:
+  - name: community.general
   - name: community.vmware
   - source: .
     type: dir
