@@ -1,40 +1,45 @@
-- name: Ensure cluster folder present
+- name: Ensure all specified VM folders are present
   community.vmware.vcenter_folder:
-    datacenter_name: "{{ vcenter_datacenter }}"
-    folder_name: "{{ vm_cluster_name }}"
+    datacenter_name: "item.vmware_guest_datacenter }}"
+    folder_name: "item.vmware_guest_folder }}"
     folder_type: vm
     state: present
-  delegate_to: localhost
+  loop: "{{ query('inventory_hostnames', 'vmware_guest') | map ('extract', hostvars) | list }}"
+  loop_control:
+    label: "{{ item.inventory_hostname }}"
 
-- name: Create cluster machines
+- name: Deploy all specified virtual machines
   community.vmware.vmware_guest:
-    datacenter: "{{ vcenter_datacenter }}"
-    cluster: "{{ vcenter_cluster }}"
-    folder: "{{ vm_cluster_name }}"
-    name: "{{ item.name }}"
-    template: "{{ item.template | default(default_vm_template) }}"
-    guest_id: "{{ item.guest_id | default(default_vm_guest_id) }}"
+    datacenter: "{{ item.vmware_guest_datacenter }}"
+    cluster: "{{ item.vmware_guest_cluster }}"
+    folder: "{{ item.vmware_guest_folder }}"
+    name: "{{ item.vmware_guest_name | default( item.inventory_hostname) }}"
+    template: "{{ item.vmware_guest_template }}"
+    guest_id: "{{ item.vmware_guest_guest_id | default(omit) }}"
     state: powered-on
     disk:
-      - datastore: "{{ vcenter_datastore }}"
-        size_gb: "{{ item.disk_size_gb | default(default_vm_disk_size_gb) }}"
+      - datastore: "{{ item.vmware_guest_datastore }}"
+        size_gb: "{{ item.vmware_guest_disk_size_gb }}"
     hardware:
-      memory_mb: "{{ item.memory_mb | default(default_vm_memory_mb) }}"
-      num_cpus: "{{ item.num_cpus | default(default_vm_num_cpus) }}"
+      memory_mb: "{{ item.vmware_guest_memory_mb }}"
+      num_cpus: "{{ item.vmware_guest_num_cpus }}"
     customization:
-      dns_servers: "{{ vm_cluster_nameservers | default(omit) }}"
-      domain: "{{ vm_cluster_domain | default(omit) }}"
-      timezone: "{{ vm_cluster_timezone | default(omit) }}"
+      dns_servers: "{{ item.vmware_guest_dns_servers | default(omit) }}"
+      domain: "{{ item.vmware_guest_domain | default(omit) }}"
+      timezone: "{{ item.vmware_guest_timezone | default(omit) }}"
     networks:
-      - name: "{{ vcenter_network_name }}"
-        netmask: "{{ vm_cluster_network_netmask }}"
-        gateway: "{{ vm_cluster_network_gateway }}"
-        ip: "{{ item.address }}"
+      - name: "{{ item.vmware_guest_network_name }}"
+        netmask: "{{ item.vmware_guest_network_netmask }}"
+        gateway: "{{ item.vmware_guest_network_gateway }}"
+        ip: "{{ item.ansible_host }}"
     vapp_properties:
       - id: instance-id
-        value: "{{ item.name }}"
+        value: "{{ item.inventory_hostname }}"
       - id: hostname
-        value: "{{ item.name }}"
+        value: "{{ item.inventory_hostname }}"
       - id: "user-data"
-        value: "{{ lookup('file', vm_cloud_init_userdata_file) | b64encode }}"
-  loop: "{{ vm_cluster_machines }}"
+        value: "{{ lookup('file', item.vmware_guest_cloudinit_userdata_file) | b64encode }}"
+
+  loop: "{{ query('inventory_hostnames', 'vmware_guest') | map ('extract', hostvars) | list }}"
+  loop_control:
+    label: "{{ item.inventory_hostname }}"

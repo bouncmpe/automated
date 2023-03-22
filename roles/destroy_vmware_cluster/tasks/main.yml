@@ -1,23 +1,34 @@
-- name: Gather all VMs from the cluster folder
+- name: Gather all VMs from the specification
   community.vmware.vmware_vm_info:
-    folder: "{{ vcenter_datacenter }}/vm/{{ vm_cluster_name }}"
+    folder: "{{ item.vmware_guest_datacenter }}/vm/{{ item.vmware_guest_folder }}"
+    vm_name: "{{ item.inventory_hostname }}"
   register: vm_info
+  loop: "{{ query('inventory_hostnames', 'vmware_guest') | map ('extract', hostvars) | list }}"
+  loop_control:
+    label: "{{ item.inventory_hostname }}"
 
-- name: Power-off all machines gathered
+- name: Extract from vm_info results and save the list of virtual machines
+  ansible.builtin.set_fact:
+    virtual_machines: "{{ vm_info | json_query('results[*].virtual_machines[*]') | flatten }}"
+
+- name: Power-off all virtual machines
   community.vmware.vmware_guest:
     uuid: "{{ item.uuid }}"
     state: powered-off
-  loop: "{{ vm_info.virtual_machines }}"
+  loop: "{{ virtual_machines }}"
 
-- name: Destroy the cluster gathered
+- name: Destroy all virtual machines
   community.vmware.vmware_guest:
     uuid: "{{ item.uuid }}"
     state: absent
-  loop: "{{ vm_info.virtual_machines }}"
+  loop: "{{ virtual_machines }}"
 
-- name: Destroy the cluster folder
+- name: Destroy all virtual machines folders
   community.vmware.vcenter_folder:
-    datacenter_name: "{{ vcenter_datacenter }}"
-    folder_name: "{{ vm_cluster_name }}"
+    datacenter: "{{ item.vmware_guest_datacenter }}"
+    folder_name: "{{ item.vmware_guest_folder }}"
     folder_type: vm
     state: absent
+  loop: "{{ query('inventory_hostnames', 'vmware_guest') | map ('extract', hostvars) | list }}"
+  loop_control:
+    label: "{{ item.inventory_hostname }}"
