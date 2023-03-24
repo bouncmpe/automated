@@ -1,9 +1,0 @@
----
-- name: Destroy the cluster on VMware vSphere
-  hosts: localhost
-  connection: local
-  gather_facts: false
-  tasks:
-    - name: Destroy virtual machines and the cluster folder
-      ansible.builtin.include_role:
-        name: bouncmpe.automated.destroy_vmware_cluster

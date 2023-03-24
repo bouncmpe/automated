@@ -1,9 +1,0 @@
-[provision]
-localhost ansible_connection=local
-
-[vmware]
-10.152.20.181
-10.152.20.182
-
-[vmware:vars]
-ansible_user=bouncmpe
