@@ -1,7 +1,7 @@
 - name: Ensure all specified VM folders are present
   community.vmware.vcenter_folder:
-    datacenter_name: "item.vmware_guest_datacenter }}"
-    folder_name: "item.vmware_guest_folder }}"
+    datacenter_name: "{{ item.vmware_guest_datacenter }}"
+    folder_name: "{{ item.vmware_guest_folder }}"
     folder_type: vm
     state: present
   loop: "{{ query('inventory_hostnames', 'vmware_guest') | map ('extract', hostvars) | list }}"
