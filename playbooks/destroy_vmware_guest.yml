@@ -1,0 +1,7 @@
+---
+- name: Destroy VM group on VmWare vSphere
+  hosts: localhost
+  become: true
+
+  roles:
+    - bouncmpe.automated.destroy_vmware_guest
