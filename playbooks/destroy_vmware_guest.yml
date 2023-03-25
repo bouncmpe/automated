@@ -1,6 +1,7 @@
 ---
 - name: Destroy VM group on VmWare vSphere
   hosts: localhost
+  connection: local
   become: true
 
   roles:
