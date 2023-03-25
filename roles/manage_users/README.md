@@ -1,5 +1,9 @@
 # bouncmpe.automated.manage_users
 
+## Description
+
+This is an Ansible playbook, which manages user accounts and their SSH keys, as well as sudo access for those users.
+
 ## Example Playbook
 
 ```yaml
