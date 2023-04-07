@@ -6,7 +6,7 @@
 - name: Manage the user {{ user.name }}
   ansible.builtin.user:
     name: "{{ user.name }}"
-    home: "{{ user.homedir | default(omit)}}"
+    home: "{{ directory}}/{{ user.name }}"
     group: "{{ user.primary_group | default(omit) }}"
     groups: "{{ user.groups | default(omit) }}"
     comment: "{{user.gecos | default(omit) }}"
@@ -41,3 +41,19 @@
     nopassword: "{{ user.sudoers.nopassword | default(omit) }}"
     runas: "{{ user.sudoers.runas | default(omit) }}"
   when: user.sudoers is defined
+
+- name: Determine user quota
+  ansible.builtin.debug:
+    msg: "{{ user.disk_quota_gb | round | int }}G"
+  when: user.disk_quota_gb is defined
+
+- name: Set the user quota to {{ user.disk_quota_gb | round | int }}G
+  ansible.builtin.shell:
+    cmd: >-
+      setquota -u {{ user.name }}
+      {{ user.disk_quota_gb | round | int }}G
+      {{ (user.disk_quota_gb * 1.1) | round | int }}G
+      0 
+      0 
+      {{ directory }}
+  when: user.disk_quota_gb is defined
