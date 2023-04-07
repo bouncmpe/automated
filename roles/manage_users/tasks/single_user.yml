@@ -42,11 +42,6 @@
     runas: "{{ user.sudoers.runas | default(omit) }}"
   when: user.sudoers is defined
 
-- name: Determine user quota
-  ansible.builtin.debug:
-    msg: "{{ user.disk_quota_gb | round | int }}G"
-  when: user.disk_quota_gb is defined
-
 - name: Set the user quota to {{ user.disk_quota_gb | round | int }}G
   ansible.builtin.shell:
     cmd: >-
@@ -56,4 +51,4 @@
       0 
       0 
       {{ directory }}
-  when: user.disk_quota_gb is defined
+  when: user.disk_quota_gb is defined and enable_quotas
