@@ -1,3 +1,3 @@
-directory: /users
+directory: /home
 directory_mode: "0751"
 enable_quotas: false
