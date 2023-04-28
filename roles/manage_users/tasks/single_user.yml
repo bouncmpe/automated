@@ -34,9 +34,10 @@
     key: "{{ user.ssh_authorized_keys }}"
   when: user.ssh_authorized_keys is defined
 
+
 - name: Manage sudoers
   community.general.sudoers:
-    name: "{{ user.name }}"
+    name: "{{ user.name | replace('.', '-') }}" # sudoers.d filename must be dot-free
     user: "{{ user.name }}"
     commands: "{{ user.sudoers.commands | default('ALL') }}"
     nopassword: "{{ user.sudoers.nopassword | default(omit) }}"
