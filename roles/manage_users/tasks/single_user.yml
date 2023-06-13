@@ -6,7 +6,7 @@
 - name: Manage the user {{ user.name }}
   ansible.builtin.user:
     name: "{{ user.name }}"
-    home: "{{ directory}}/{{ user.name }}"
+    home: "{{ config.home.directory | default('/home') }}/{{ user.name }}"
     state: "{{ user.state | default(omit) }}"
     remove: "{{ user.remove | default(true) }}"
     group: "{{ user.primary_group | default(omit) }}"
@@ -18,7 +18,7 @@
     ssh_key_type: "ed25519"
     ssh_key_file: ".ssh/id_ed25519"
     shell: /bin/bash
-    system: "{{user.system | default(false) }}"
+    system: "{{ user.system | default(false) }}"
     update_password: "on_create"
 
 - name: Manage the public SSH keys on GitHub server for {{ user.name }}

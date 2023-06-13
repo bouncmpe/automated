@@ -4,17 +4,10 @@
       - ssh-import-id
     state: present
 
-- name: Ensure quotas packages installed if needed
-  ansible.builtin.package:
-    name:
-      - quota
-    state: present
-  when: enable_quotas
-
 - name: Ensure users directory exists
   ansible.builtin.file:
-    path: "{{ directory }}"
-    mode: "{{ directory_mode }}"
+    path: "{{ config.home.directory | default('/home') }}"
+    mode: "{{ config.home.directory_mode | default('0755') }}"
     state: directory
 
 - name: Manage usergroups
