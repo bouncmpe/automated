@@ -1,0 +1,34 @@
+---
+- name: Manage users
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Manage users
+      ansible.builtin.include_role:
+        name: bouncmpe.automated.manage_users
+
+    - name: Manage quotas
+      ansible.builtin.include_role:
+        name: bouncmpe.automated.manage_quotas
+
+  vars:
+    config:
+      home:
+        src: LABEL=/home
+        directory: /home
+        enable_quotas: true
+      groups: ["sudo", "users", "docker", "kvm"]
+      users:
+        - name: dulus
+          groups: ["sudo"]
+          ssh_import_id:
+            - gh:doganulus
+          sudoers:
+            nopassword: true
+
+        - name: dogan.ulus
+          groups: ["users"]
+          ssh_import_id:
+            - gh:doganulus
+          disk_quota_gb: 100
