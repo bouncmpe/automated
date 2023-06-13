@@ -1,0 +1,23 @@
+- name: Install dependencies
+  ansible.builtin.package:
+    name:
+      - quota
+    state: present
+  when: config.home.enable_quotas
+
+- name: Mount up device by UUID
+  ansible.posix.mount:
+    path: "{{ config.home.directory | default('/home')}}"
+    src: "{{ config.home.src | default('ext4')}}"
+    fstype: "{{ config.home.fstype | default('ext4')}}"
+    opts: defaults,nofail,discard,usrquota,grpquota
+    state: mounted
+  when: config.home.enable_quotas
+
+- name: Manage user quotas
+  ansible.builtin.include_tasks:
+    file: single_user.yml
+  loop: "{{ config.users }}"
+  loop_control:
+    loop_var: user
+  when: config.home.enable_quotas
