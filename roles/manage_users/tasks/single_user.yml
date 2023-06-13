@@ -7,6 +7,8 @@
   ansible.builtin.user:
     name: "{{ user.name }}"
     home: "{{ directory}}/{{ user.name }}"
+    state: "{{ user.state | default(omit) }}"
+    remove: "{{ user.remove | default(true) }}"
     group: "{{ user.primary_group | default(omit) }}"
     groups: "{{ user.groups | default(omit) }}"
     comment: "{{user.gecos | default(omit) }}"
@@ -23,6 +25,7 @@
   ansible.posix.authorized_key:
     user: "{{ user.name }}"
     key: https://github.com/{{ github_id }}.keys
+    state: "{{ user.state | default(omit) }}"
   loop: "{{ user.ssh_import_id | map('regex_replace', '^gh:(.*)$', '\\1') | list }}"
   when: user.ssh_import_id is defined
   loop_control:
@@ -32,24 +35,15 @@
   ansible.posix.authorized_key:
     user: "{{ user.name }}"
     key: "{{ user.ssh_authorized_keys }}"
+    state: "{{ user.state | default(omit) }}"
   when: user.ssh_authorized_keys is defined
 
 - name: Manage sudoers
   community.general.sudoers:
     name: "{{ user.name | replace('.', '-') }}" # sudoers.d filename must be dot-free
     user: "{{ user.name }}"
+    state: "{{ user.state | default(omit) }}"
     commands: "{{ user.sudoers.commands | default('ALL') }}"
     nopassword: "{{ user.sudoers.nopassword | default(omit) }}"
     runas: "{{ user.sudoers.runas | default(omit) }}"
   when: user.sudoers is defined
-
-- name: Set the user quota to {{ user.disk_quota_gb | round | int }}G
-  ansible.builtin.shell:
-    cmd: >-
-      setquota -u {{ user.name }}
-      {{ user.disk_quota_gb | round | int }}G
-      {{ (user.disk_quota_gb * 1.1) | round | int }}G
-      0 
-      0 
-      {{ directory }}
-  when: user.disk_quota_gb is defined and enable_quotas
