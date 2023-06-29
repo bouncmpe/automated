@@ -6,5 +6,5 @@
       {{ (user.disk_quota_gb * 1.1) | round | int }}G
       0 
       0 
-      {{ automated_config_home_directory | default('/home') }}
+      {{ automated_config_home_mount_point }}
   when: user.disk_quota_gb is defined

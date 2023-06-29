@@ -13,8 +13,6 @@
         name: bouncmpe.automated.manage_quotas
 
   vars:
-    automated_config_home_src: LABEL=/home
-    automated_config_home_directory: /home
     automated_config_home_enable_quotas: true
     automated_config_groups: ["sudo", "users", "docker", "kvm"]
     automated_config_users:

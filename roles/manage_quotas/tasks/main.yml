@@ -5,12 +5,12 @@
     state: present
   when: automated_config_home_enable_quotas
 
-- name: Mount up device by UUID
+- name: Mount up device where HOME resides
   ansible.posix.mount:
-    path: "{{ automated_config_home_directory | default('/home')}}"
-    src: "{{ automated_config_home_src | default('ext4')}}"
-    fstype: "{{ automated_config_home_fstype | default('ext4')}}"
-    opts: defaults,nofail,discard,usrquota,grpquota
+    path: "{{ automated_config_home_mount_point }}"
+    src: "{{ automated_config_home_mount_device }}"
+    fstype: "{{ automated_config_home_mount_fstype }}"
+    opts: "{{ automated_config_home_mount_options }}"
     state: mounted
   when: automated_config_home_enable_quotas
 
