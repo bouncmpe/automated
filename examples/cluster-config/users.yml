@@ -13,22 +13,20 @@
         name: bouncmpe.automated.manage_quotas
 
   vars:
-    config:
-      home:
-        src: LABEL=/home
-        directory: /home
-        enable_quotas: true
-      groups: ["sudo", "users", "docker", "kvm"]
-      users:
-        - name: dulus
-          groups: ["sudo"]
-          ssh_import_id:
-            - gh:doganulus
-          sudoers:
-            nopassword: true
+    automated_config_home_src: LABEL=/home
+    automated_config_home_directory: /home
+    automated_config_home_enable_quotas: true
+    automated_config_groups: ["sudo", "users", "docker", "kvm"]
+    automated_config_users:
+      - name: dulus
+        groups: ["sudo"]
+        ssh_import_id:
+          - gh:doganulus
+        sudoers:
+          nopassword: true
 
-        - name: dogan.ulus
-          groups: ["users"]
-          ssh_import_id:
-            - gh:doganulus
-          disk_quota_gb: 100
+      - name: dogan.ulus
+        groups: ["users"]
+        ssh_import_id:
+          - gh:doganulus
+        disk_quota_gb: 100

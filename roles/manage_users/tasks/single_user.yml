@@ -6,7 +6,7 @@
 - name: Manage the user {{ user.name }}
   ansible.builtin.user:
     name: "{{ user.name }}"
-    home: "{{ config.home.directory | default('/home') }}/{{ user.name }}"
+    home: "{{ automated_config_home_directory | default('/home') }}/{{ user.name }}"
     state: "{{ user.state | default(omit) }}"
     remove: "{{ user.remove | default(true) }}"
     group: "{{ user.primary_group | default(omit) }}"
