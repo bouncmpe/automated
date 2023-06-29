@@ -1,0 +1,8 @@
+---
+- name: Manage users
+  hosts: localhost
+  connection: local
+  become: true
+
+  roles:
+    - bouncmpe.automated.manage_users

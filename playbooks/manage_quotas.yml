@@ -1,0 +1,8 @@
+---
+- name: Manage user quotas
+  hosts: localhost
+  connection: local
+  become: true
+
+  roles:
+    - bouncmpe.automated.manage_quotas
