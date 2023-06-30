@@ -2,6 +2,7 @@
   ansible.builtin.package:
     name:
       - quota
+      - linux-image-extra-virtual # Kernel modules to implemet quotas
     state: present
   when: automated_config_home_enable_quotas
 
@@ -18,6 +19,12 @@
   ansible.posix.mount:
     path: "{{ automated_config_home_mount_point }}"
     state: remounted
+  when: automated_config_home_enable_quotas
+
+- name: Enabling quotas
+  ansible.builtin.shell:
+    cmd: quotacheck -ugm "{{ automated_config_home_mount_point }}" && quotaon -v "{{ automated_config_home_mount_point }}"
+  when: automated_config_home_enable_quotas
 
 - name: Manage user quotas
   ansible.builtin.include_tasks:
