@@ -1,4 +1,4 @@
-automated_config_home_mount_device: "LABEL=ROOT"
+automated_config_home_mount_device: 'LABEL="cloudimg-rootfs"'
 automated_config_home_mount_point: "/"
 automated_config_home_mount_fstype: "ext4"
 automated_config_home_mount_options: "defaults,nofail,discard,usrquota,grpquota"

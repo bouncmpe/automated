@@ -14,6 +14,11 @@
     state: mounted
   when: automated_config_home_enable_quotas
 
+- name: Remount a mounted volume
+  ansible.posix.mount:
+    path: "{{ automated_config_home_mount_point }}"
+    state: remounted
+
 - name: Manage user quotas
   ansible.builtin.include_tasks:
     file: single_user.yml
