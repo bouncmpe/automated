@@ -21,9 +21,23 @@
     state: remounted
   when: automated_config_home_enable_quotas
 
+- name: Initialize user quotas
+  ansible.builtin.shell:
+    cmd: quotacheck -u "{{ automated_config_home_mount_point }}"
+    args:
+      creates: "{{(automated_config_home_mount_point , aquota.user) | path_join }}"
+  when: automated_config_home_enable_quotas
+
+- name: Initialize group quotas
+  ansible.builtin.shell:
+    cmd: quotacheck -g "{{ automated_config_home_mount_point }}"
+    args:
+      creates: "{{(automated_config_home_mount_point , aquota.group) | path_join }}"
+  when: automated_config_home_enable_quotas
+
 - name: Enabling quotas
   ansible.builtin.shell:
-    cmd: quotacheck -ugm "{{ automated_config_home_mount_point }}" && quotaon -v "{{ automated_config_home_mount_point }}"
+    cmd: quotaon -v "{{ automated_config_home_mount_point }}"
   when: automated_config_home_enable_quotas
 
 - name: Manage user quotas
