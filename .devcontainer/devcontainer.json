@@ -12,7 +12,8 @@
       ]
     },
     "settings": {
-      "terminal.integrated.defaultProfile.linux": "bash"
+      "terminal.integrated.defaultProfile.linux": "bash",
+      "ansible.python.interpreterPath": "/usr/bin/python3"
     }
   },
   "postCreateCommand": "ansible-galaxy install -r requirements.yml --force",
