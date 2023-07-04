@@ -14,7 +14,7 @@
 
   vars:
     automated_config_home_enable_quotas: true
-    automated_config_groups: ["sudo", "users", "docker", "kvm"]
+    automated_config_groups: ["sudo", "users"]
     automated_config_users:
       - name: dulus
         groups: ["sudo"]
