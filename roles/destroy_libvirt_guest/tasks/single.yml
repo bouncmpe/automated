@@ -1,0 +1,16 @@
+- name: Get info about virtual guests using libvirt
+  community.libvirt.virt:
+    name: "{{ guest.inventory_hostname }}"
+    command: "status"
+  register: status_result
+
+- name: Force stop virtual guests using libvirt
+  community.libvirt.virt:
+    name: "{{ guest.inventory_hostname }}"
+    command: "destroy"
+  when: status_result.status in ['running', 'paused']
+
+- name: Delete virtual guests using libvirt
+  community.libvirt.virt:
+    name: "{{ guest.inventory_hostname }}"
+    command: "undefine"
