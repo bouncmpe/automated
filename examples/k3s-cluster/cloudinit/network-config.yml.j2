@@ -1,0 +1,17 @@
+network:
+  version: 2
+  ethernets:
+    enp1s0:
+      dhcp4: false
+      dhcp6: false 
+      addresses:
+        - {{ item.ansible_host }}/24
+      nameservers:
+        addresses: {{ item.virtual_guest_nameservers }}
+        search:
+          - {{ item.virtual_guest_domain }}
+      routes:
+        - to: default
+          via: {{ item.virtual_guest_network_netmask }}
+          metric: 100
+          on-link: true

@@ -1,0 +1,38 @@
+[all]
+k3s-ctrl01 ansible_host=192.168.122.181
+k3s-worker01 ansible_host=192.168.122.184
+k3s-worker02 ansible_host=192.168.122.185
+
+[control]
+k3s-ctrl01
+
+[worker]
+k3s-worker01
+k3s-worker02 
+
+[k3s_cluster:children]
+control
+worker
+
+[virtual_guest]
+k3s-ctrl01
+k3s-worker01
+k3s-worker02
+
+[virtual_guest:vars]
+virtual_guest_num_cpus=2 
+virtual_guest_memory_mb=4096
+virtual_guest_disk_size_gb=40
+virtual_guest_network_name=default
+virtual_guest_network_netmask=192.168.122.1
+virtual_guest_nameservers=[8.8.8.8]
+virtual_guest_domain=localdomain
+virtual_guest_timezone=Europe/Istanbul
+
+libvirt_guest_osinfo=debian12
+libvirt_guest_image_path=https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
+libvirt_guest_image_format=qcow2
+libvirt_guest_disk_format=qcow2
+
+[all:vars]
+ansible_user=ansible

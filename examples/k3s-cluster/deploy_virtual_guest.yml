@@ -1,0 +1,10 @@
+---
+- name: Deploy virtual guests on KVM
+  hosts: localhost
+  become: true
+  connection: local
+
+  tasks:
+    - name: Deploy virtual machines
+      ansible.builtin.include_role:
+        name: bouncmpe.automated.deploy_libvirt_guest
