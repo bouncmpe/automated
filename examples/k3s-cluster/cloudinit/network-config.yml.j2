@@ -12,6 +12,6 @@ network:
           - {{ item.virtual_guest_domain }}
       routes:
         - to: default
-          via: {{ item.virtual_guest_network_netmask }}
+          via: {{ item.virtual_guest_network_gateway }}
           metric: 100
           on-link: true
