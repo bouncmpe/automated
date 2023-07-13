@@ -1,0 +1,66 @@
+- name: Ensure cache directory exists
+  ansible.builtin.file:
+    path: "{{ libvirt_images_cache_path }}"
+    state: directory
+
+- name: Set guest template path
+  ansible.builtin.set_fact:
+    libvirt_guest_template_path: "{{ libvirt_images_cache_path }}/{{ item.libvirt_guest_image_path | basename }}"
+
+- name: Set guest disk name
+  ansible.builtin.set_fact:
+    libvirt_guest_disk_name: "{{ item.inventory_hostname }}.{{ item.libvirt_guest_disk_format | default(libvirt_guest_disk_format) }}"
+
+- name: Set guest disk path
+  ansible.builtin.set_fact:
+    libvirt_guest_disk_path: "{{ [libvirt_images_path, libvirt_guest_disk_name] | path_join }}"
+
+- name: Ensure cloud-init cache directory exists
+  ansible.builtin.file:
+    path: "{{ libvirt_cloudinit_cache_path }}/{{ item.inventory_hostname }}"
+    state: directory
+
+- name: Render cloud-init user-data template
+  ansible.builtin.template:
+    src: cloudinit/user-data.yml.j2
+    dest: "{{ libvirt_cloudinit_cache_path }}/{{ item.inventory_hostname }}/user-data.yml"
+
+- name: Render cloud-init network-config template
+  ansible.builtin.template:
+    src: cloudinit/network-config.yml.j2
+    dest: "{{ libvirt_cloudinit_cache_path }}/{{ item.inventory_hostname }}/network-config.yml"
+  
+- name: Ensure remote images are downloaded
+  ansible.builtin.get_url:
+    url: "{{ item.libvirt_guest_image_path }}"
+    dest: "{{ libvirt_guest_template_path }}"
+    checksum: "{{ item.virtual_guest_image_checksum | default(omit) }}"
+  when: "'http' in item.libvirt_guest_image_path"
+
+- name: Ensure local images are copied
+  ansible.builtin.copy:
+    url: "{{ item.libvirt_guest_image_path }}"
+    dest: "{{ libvirt_guest_template_path }}"
+    checksum: "{{ item.checksum | default(omit) }}"
+  when: "'http' not in item.libvirt_guest_image_path"
+
+- name: Create disk from the template
+  ansible.builtin.shell: >-
+    qemu-img convert 
+    -f {{ item.libvirt_guest_image_format | default(libvirt_guest_image_format) }} 
+    -O {{ item.libvirt_guest_disk_format | default(libvirt_guest_disk_format) }} 
+    {{ libvirt_guest_template_path }} 
+    {{ libvirt_guest_disk_path }}
+
+- name: Create disk from the template
+  ansible.builtin.shell: >-
+    virt-install
+    --name {{ item.inventory_hostname }}
+    --vcpus {{ item.virtual_guest_num_cpus }}
+    --memory {{ item.virtual_guest_memory_mb }}
+    --disk size={{ item.virtual_guest_disk_size_gb }},path={{ libvirt_guest_disk_path }}
+    --import
+    --cloud-init user-data={{ libvirt_cloudinit_cache_path }}/{{ item.inventory_hostname }}/user-data.yml,network-config={{ libvirt_cloudinit_cache_path }}/{{ item.inventory_hostname }}/network-config.yml,disable=on
+    --network {{ item.virtual_guest_network_name | default(virtual_guest_network_name) }}
+    --osinfo {{ item.libvirt_guest_osinfo | default('detect=on,name=linux2022') }}
+    --noautoconsole

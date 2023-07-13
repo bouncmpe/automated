@@ -1,0 +1,8 @@
+libvirt_images_path: /var/lib/libvirt/images
+libvirt_images_cache_path: /tmp/libvirt/images
+libvirt_cloudinit_cache_path: "/tmp/libvirt/cloudinit"
+
+virtual_guest_network_name: default
+virtual_guest_timezone: Europe/Istanbul
+libvirt_guest_image_format: qcow2
+libvirt_guest_disk_format: qcow2

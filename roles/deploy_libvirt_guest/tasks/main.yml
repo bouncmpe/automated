@@ -1,0 +1,14 @@
+---
+- name: Deploy virtual guests using libvirt
+  ansible.builtin.include_tasks:
+    file: single.yml
+  loop: "{{ query('inventory_hostnames', 'virtual_guest') | map ('extract', hostvars) | list }}"
+  loop_control:
+    label: "{{ item.inventory_hostname }}"
+    loop_var: item
+
+- name: Clean up temporary cloudinit files
+  ansible.builtin.file:
+    path: "{{ libvirt_cloudinit_cache_path }}"
+    state: absent
+
