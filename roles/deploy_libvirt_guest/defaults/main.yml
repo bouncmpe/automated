@@ -2,7 +2,8 @@ libvirt_images_path: /var/lib/libvirt/images
 libvirt_images_cache_path: /tmp/libvirt/images
 libvirt_cloudinit_cache_path: "/tmp/libvirt/cloudinit"
 
-virtual_guest_network_name: default
-virtual_guest_timezone: Europe/Istanbul
 libvirt_guest_image_format: qcow2
 libvirt_guest_disk_format: qcow2
+
+virtual_guest_cloudinit_user_data_template: cloud/templates/user-data.yml.j2
+virtual_guest_cloudinit_network_config_template: cloud/templates/network-config.yml.j2

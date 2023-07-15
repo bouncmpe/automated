@@ -22,12 +22,12 @@
 
 - name: Render cloud-init user-data template
   ansible.builtin.template:
-    src: cloudinit/user-data.yml.j2
+    src: "{{ virtual_guest_cloudinit_user_data_template }}"
     dest: "{{ libvirt_cloudinit_cache_path }}/{{ item.inventory_hostname }}/user-data.yml"
 
 - name: Render cloud-init network-config template
   ansible.builtin.template:
-    src: cloudinit/network-config.yml.j2
+    src: "{{ virtual_guest_cloudinit_network_config_template }}"
     dest: "{{ libvirt_cloudinit_cache_path }}/{{ item.inventory_hostname }}/network-config.yml"
   
 - name: Ensure remote images are downloaded
