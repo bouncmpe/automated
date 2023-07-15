@@ -1,0 +1,8 @@
+---
+- name: Deploy virtual guests using LibVirt
+  hosts: localhost
+  connection: local
+  become: true
+
+  roles:
+    - bouncmpe.automated.deploy_libvirt_guest

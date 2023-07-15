@@ -1,0 +1,8 @@
+---
+- name: Destroy virtual guests using LibVirt
+  hosts: localhost
+  connection: local
+  become: true
+
+  roles:
+    - bouncmpe.automated.destroy_libvirt_guest
