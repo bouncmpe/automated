@@ -1,7 +1,7 @@
 # ansible galaxy requirements
 #
 # See: https://docs.ansible.com/ansible/latest/galaxy/user_guide.html
-# Use: ansible-galaxy install -r requirements.yml --force
+# Use: ansible-galaxy install -r requirements.local.yml --force
 
 collections:
   - source: .
