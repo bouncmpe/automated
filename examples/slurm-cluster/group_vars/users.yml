@@ -1,0 +1,37 @@
+automated_config_home_enable_quotas: true
+
+automated_config_groups:
+  - "sudo"
+  - "faculty"
+  - "graduate"
+  - "senior"
+  - "colors"
+  - "netlab"
+  - "bounllm"
+  - "bounverif"
+  - "slurm_admin"
+
+automated_config_users:
+  - name: dogan.ulus
+    groups: ["sudo", "faculty", "bounverif"]
+    ssh_import_id:
+      - gh:doganulus
+    sudoers:
+      nopassword: true
+    disk_quota_gb: 100
+
+  - name: dulus
+    groups: ["sudo", "faculty", "bounverif"]
+    ssh_import_id:
+      - gh:doganulus
+    sudoers:
+      nopassword: true
+    disk_quota_gb: 100
+
+  - name: dulus2
+    groups: ["slurm_admin"]
+    ssh_import_id:
+      - gh:doganulus
+    sudoers:
+      nopassword: true
+    disk_quota_gb: 100

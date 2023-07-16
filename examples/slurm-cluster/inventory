@@ -1,0 +1,69 @@
+[all]
+login01 ansible_host=192.168.122.160
+compute01 ansible_host=192.168.122.161
+
+[users]
+login01
+compute01
+
+######
+# SLURM
+######
+[slurm-master]
+login01
+
+[slurm-nfs]
+login01
+
+[slurm-node]
+compute01
+
+[slurm-cache:children]
+slurm-master
+
+[slurm-nfs-client:children]
+slurm-node
+
+[slurm-metric:children]
+slurm-master
+
+[slurm-login:children]
+slurm-master
+
+# Single group for the whole cluster
+[slurm-cluster:children]
+slurm-master
+slurm-node
+slurm-cache
+slurm-nfs
+slurm-metric
+slurm-login
+
+##################
+# Virtual Guests #
+##################
+[virtual_guest]
+login01 virtual_guest_disk_size_gb=60
+compute01 
+
+[virtual_guest:vars]
+virtual_guest_num_cpus=2 
+virtual_guest_memory_mb=4096
+virtual_guest_disk_size_gb=40
+virtual_guest_network_name=default
+virtual_guest_network_gateway=192.168.122.1
+virtual_guest_network_netmask=255.255.255.0
+virtual_guest_nameservers=[8.8.8.8]
+virtual_guest_domain=localdomain
+virtual_guest_timezone=Europe/Istanbul
+
+libvirt_guest_osinfo=ubuntu20.04
+libvirt_guest_image_path=https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
+libvirt_guest_image_format=qcow2
+libvirt_guest_disk_format=qcow2
+
+##################
+# Virtual Guests #
+##################
+[all:vars]
+ansible_user=ansible
