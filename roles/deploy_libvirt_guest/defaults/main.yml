@@ -5,5 +5,5 @@ libvirt_cloudinit_cache_path: "/tmp/libvirt/cloudinit"
 libvirt_guest_image_format: qcow2
 libvirt_guest_disk_format: qcow2
 
-virtual_guest_cloudinit_user_data_template: cloud/templates/user-data.yml.j2
-virtual_guest_cloudinit_network_config_template: cloud/templates/network-config.yml.j2
+virtual_guest_cloudinit_user_data_template: ../templates/cloud/user-data.yml.j2
+virtual_guest_cloudinit_network_config_template: ../templates/cloud/network-config.yml.j2

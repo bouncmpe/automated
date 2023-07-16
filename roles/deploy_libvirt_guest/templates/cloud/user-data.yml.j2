@@ -1,0 +1,42 @@
+#cloud-config
+hostname: {{ item.inventory_hostname }}
+timezone: {{ item.virtual_guest_timezone | default(virtual_guest_timezone) }}
+ssh_pwauth: false
+
+package_update: true
+packages:
+  - sudo
+  - git
+  - ssh-import-id
+  
+users:
+  - default
+  - name: ansible
+    groups: ["sudo"]
+    lock_passwd: true
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_import_id:
+      - gh:doganulus
+
+system_info:
+  default_user:
+    name: bouncmpe
+    passwd: $6$bubk9lLYlmugZF03$YTOTIlm2r8miU0uMvn1/xXcSeI02G./wxvpcSDAJdI4GfwV6CppEw20DSAU4x7y7dEzM7evWdAb6ON6SAMKlw0 #changethis
+    shell: /bin/bash
+    groups:
+      [
+        adm,
+        audio,
+        cdrom,
+        dialout,
+        dip,
+        floppy,
+        lxd,
+        netdev,
+        plugdev,
+        sudo,
+        video,
+      ]
+    sudo: ALL=(ALL) ALL
+    lock_passwd: false

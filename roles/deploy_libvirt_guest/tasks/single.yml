@@ -22,12 +22,12 @@
 
 - name: Render cloud-init user-data template
   ansible.builtin.template:
-    src: "{{ virtual_guest_cloudinit_user_data_template }}"
+    src: "{{ virtual_guest_cloudinit_user_data_template | default('../templates/cloud/user-data.yml.j2') }}"
     dest: "{{ libvirt_cloudinit_cache_path }}/{{ item.inventory_hostname }}/user-data.yml"
 
 - name: Render cloud-init network-config template
   ansible.builtin.template:
-    src: "{{ virtual_guest_cloudinit_network_config_template }}"
+    src: "{{ virtual_guest_cloudinit_network_config_template | default('../templates/cloud/network-config.yml.j2') }}"
     dest: "{{ libvirt_cloudinit_cache_path }}/{{ item.inventory_hostname }}/network-config.yml"
   
 - name: Ensure remote images are downloaded
@@ -51,6 +51,13 @@
     -O {{ item.libvirt_guest_disk_format | default(libvirt_guest_disk_format) }} 
     {{ libvirt_guest_template_path }} 
     {{ libvirt_guest_disk_path }}
+
+- name: Resize disk
+  ansible.builtin.shell: >-
+    qemu-img resize 
+    -f {{ item.libvirt_guest_disk_format | default(libvirt_guest_disk_format) }} 
+    {{ libvirt_guest_disk_path }} 
+    {{ item.virtual_guest_disk_size_gb }}G
 
 - name: Create disk from the template
   ansible.builtin.shell: >-
