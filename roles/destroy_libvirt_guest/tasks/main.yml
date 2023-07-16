@@ -1,9 +1,27 @@
 ---
+- name: Get the namelist of all virtual machines
+  ansible.builtin.shell: >-
+    virsh list --name --all
+  register: libvirt_guest_list_all_result
+
+- name: Convert inactive virtual machines to a list
+  ansible.builtin.set_fact:
+    libvirt_guest_list_all: "{{ libvirt_guest_list_all_result.stdout_lines | list }}"
+
+- name: Get the namelist of inactive virtual machines
+  ansible.builtin.shell: >-
+    virsh list --name --inactive
+  register: libvirt_guest_list_inactive_result
+
+- name: Convert inactive virtual machines to a list
+  ansible.builtin.set_fact:
+    libvirt_guest_list_inactive: "{{ libvirt_guest_list_inactive_result.stdout_lines | list }}"
+
 - name: Delete virtual guests using libvirt
   ansible.builtin.include_tasks:
     file: single.yml
+  when: guest.inventory_hostname in libvirt_guest_list_all
   loop: "{{ query('inventory_hostnames', 'virtual_guest') | map ('extract', hostvars) | list }}"
   loop_control:
     label: "{{ guest.inventory_hostname }}"
     loop_var: guest
-

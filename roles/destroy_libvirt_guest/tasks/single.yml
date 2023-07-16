@@ -1,16 +1,8 @@
-- name: Get info about virtual guests using libvirt
-  community.libvirt.virt:
-    name: "{{ guest.inventory_hostname }}"
-    command: "status"
-  register: status_result
-
 - name: Force stop virtual guests using libvirt
-  community.libvirt.virt:
-    name: "{{ guest.inventory_hostname }}"
-    command: "destroy"
-  when: status_result.status in ['running', 'paused']
+  ansible.builtin.shell: >-
+    virsh destroy "{{ guest.inventory_hostname }}"
+  when: not guest.inventory_hostname in libvirt_guest_list_inactive
 
 - name: Delete virtual guests using libvirt
-  community.libvirt.virt:
-    name: "{{ guest.inventory_hostname }}"
-    command: "undefine"
+  ansible.builtin.shell: >-
+    virsh undefine "{{ guest.inventory_hostname }}" --remove-all-storage --wipe-storage

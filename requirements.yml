@@ -6,6 +6,5 @@
 collections:
   - name: community.general
   - name: community.vmware
-  - name: community.libvirt
   - source: .
     type: dir
