@@ -1,8 +1,9 @@
 ---
 - name: Manage user quotas
-  hosts: localhost
-  connection: local
+  hosts: all
   become: true
 
-  roles:
-    - bouncmpe.automated.manage_quotas
+  tasks:
+    - name: Call the role
+      ansible.builtin.include_role:
+        name: bouncmpe.automated.manage_quotas

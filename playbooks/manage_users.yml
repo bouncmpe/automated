@@ -1,7 +1,6 @@
 ---
 - name: Manage users
-  hosts: localhost
-  connection: local
+  hosts: all
   become: true
 
   roles:
