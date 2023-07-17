@@ -7,9 +7,8 @@ network:
       addresses:
         - {{ guest.ansible_host }}/24
       nameservers:
-        addresses: {{ guest.virtual_guest_nameservers }}
-        search:
-          - {{ guest.virtual_guest_domain }}
+        addresses: {{ guest.virtual_guest_nameservers | default([]) }}
+        search: {{ guest.virtual_guest_domain | default([]) }}
       routes:
         - to: default
           via: {{ guest.virtual_guest_network_gateway }}
