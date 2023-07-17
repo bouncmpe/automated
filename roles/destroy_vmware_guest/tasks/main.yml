@@ -3,7 +3,7 @@
     folder: "{{ item.vmware_guest_datacenter }}/vm/{{ item.vmware_guest_folder }}"
     vm_name: "{{ item.inventory_hostname }}"
   register: vm_info
-  loop: "{{ query('inventory_hostnames', 'vmware_guest') | map ('extract', hostvars) | list }}"
+  loop: "{{ query('inventory_hostnames', 'virtual_guest') | map ('extract', hostvars) | list }}"
   loop_control:
     label: "{{ item.inventory_hostname }}"
 
@@ -29,6 +29,6 @@
     folder_name: "{{ item.vmware_guest_folder }}"
     folder_type: vm
     state: absent
-  loop: "{{ query('inventory_hostnames', 'vmware_guest') | map ('extract', hostvars) | list }}"
+  loop: "{{ query('inventory_hostnames', 'virtual_guest') | map ('extract', hostvars) | list }}"
   loop_control:
     label: "{{ item.inventory_hostname }}"
