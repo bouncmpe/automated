@@ -2,7 +2,6 @@
 - name: Deploy VM group on VmWare vSphere
   hosts: localhost
   connection: local
-  become: true
 
   roles:
     - bouncmpe.automated.deploy_vmware_guest
