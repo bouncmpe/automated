@@ -14,7 +14,7 @@
 
 - name: Render cloud-init network-config template
   ansible.builtin.set_fact:
-    virtual_guest_cloudinit_network_config_file: "{{ virtual_guest_cloudinit_cache_path }}/{{ guest.inventory_hostname }}/user-data.yml"
+    virtual_guest_cloudinit_network_config_file: "{{ virtual_guest_cloudinit_cache_path }}/{{ guest.inventory_hostname }}/network-config.yml"
 
 - name: Render cloud-init network-config template
   ansible.builtin.template:
