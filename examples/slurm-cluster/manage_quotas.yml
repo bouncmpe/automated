@@ -1,7 +1,0 @@
----
-- name: Manage user quotas
-  hosts: slurm-nfs
-  become: true
-
-  roles:
-    - bouncmpe.automated.manage_quotas
