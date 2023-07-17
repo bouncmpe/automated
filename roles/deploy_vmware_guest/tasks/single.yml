@@ -1,0 +1,61 @@
+- name: Ensure cloud-init cache directory exists
+  ansible.builtin.file:
+    path: "{{ virtual_guest_cloudinit_cache_path }}/{{ guest.inventory_hostname }}"
+    state: directory
+
+- name: Render cloud-init network-config template
+  ansible.builtin.set_fact:
+    virtual_guest_cloudinit_user_data_file: "{{ virtual_guest_cloudinit_cache_path }}/{{ guest.inventory_hostname }}/user-data.yml"
+
+- name: Render cloud-init user-data template
+  ansible.builtin.template:
+    src: "{{ virtual_guest_cloudinit_user_data_template }}"
+    dest: "{{ virtual_guest_cloudinit_user_data_file }}"
+
+- name: Render cloud-init network-config template
+  ansible.builtin.set_fact:
+    virtual_guest_cloudinit_network_config_file: "{{ virtual_guest_cloudinit_cache_path }}/{{ guest.inventory_hostname }}/user-data.yml"
+
+- name: Render cloud-init network-config template
+  ansible.builtin.template:
+    src: "{{ virtual_guest_cloudinit_network_config_template }}"
+    dest: "{{ virtual_guest_cloudinit_network_config_file }}"
+
+- name: Ensure all specified VM folders are present
+  community.vmware.vcenter_folder:
+    datacenter_name: "{{ guest.vmware_guest_datacenter }}"
+    folder_name: "{{ guest.vmware_guest_folder }}"
+    folder_type: vm
+    state: present
+
+- name: Deploy all specified virtual machines
+  community.vmware.vmware_guest:
+    datacenter: "{{ guest.vmware_guest_datacenter }}"
+    cluster: "{{ guest.vmware_guest_cluster }}"
+    folder: "{{ guest.vmware_guest_folder }}"
+    name: "{{ guest.vmware_guest_name | default( guest.inventory_hostname) }}"
+    template: "{{ guest.vmware_guest_template }}"
+    guest_id: "{{ guest.vmware_guest_guest_id | default(omit) }}"
+    state: powered-on
+    disk:
+      - datastore: "{{ guest.vmware_guest_datastore }}"
+        size_gb: "{{ guest.virtual_guest_disk_size_gb }}"
+    hardware:
+      memory_mb: "{{ guest.virtual_guest_memory_mb }}"
+      num_cpus: "{{ guest.virtual_guest_num_cpus }}"
+    customization:
+      dns_servers: "{{ guest.virtual_guest_dns_servers | default(omit) }}"
+      domain: "{{ guest.virtual_guest_domain | default(omit) }}"
+      timezone: "{{ guest.virtual_guest_timezone | default(omit) }}"
+    networks:
+      - name: "{{ guest.vmware_guest_network_name }}"
+        netmask: "{{ guest.vmware_guest_network_netmask }}"
+        gateway: "{{ guest.vmware_guest_network_gateway }}"
+        ip: "{{ guest.ansible_host }}"
+    vapp_properties:
+      - id: instance-id
+        value: "{{ guest.inventory_hostname }}"
+      - id: hostname
+        value: "{{ guest.inventory_hostname }}"
+      - id: "user-data"
+        value: "{{ lookup('file', virtual_guest_cloudinit_user_data_file) | b64encode }}"

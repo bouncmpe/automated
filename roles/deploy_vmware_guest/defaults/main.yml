@@ -1,0 +1,3 @@
+virtual_guest_cloudinit_cache_path: "/tmp/vmware/cloudinit"
+virtual_guest_cloudinit_user_data_template: ../templates/cloud/user-data.yml.j2
+virtual_guest_cloudinit_network_config_template: ../templates/cloud/network-config.yml.j2

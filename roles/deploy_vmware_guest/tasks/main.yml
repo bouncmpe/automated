@@ -1,45 +1,13 @@
-- name: Ensure all specified VM folders are present
-  community.vmware.vcenter_folder:
-    datacenter_name: "{{ item.vmware_guest_datacenter }}"
-    folder_name: "{{ item.vmware_guest_folder }}"
-    folder_type: vm
-    state: present
-  loop: "{{ query('inventory_hostnames', 'vmware_guest') | map ('extract', hostvars) | list }}"
+---
+- name: Deploy virtual guests using libvirt
+  ansible.builtin.include_tasks:
+    file: single.yml
+  loop: "{{ query('inventory_hostnames', 'virtual_guest') | map ('extract', hostvars) | list }}"
   loop_control:
-    label: "{{ item.inventory_hostname }}"
+    label: "{{ guest.inventory_hostname }}"
+    loop_var: guest
 
-- name: Deploy all specified virtual machines
-  community.vmware.vmware_guest:
-    datacenter: "{{ item.vmware_guest_datacenter }}"
-    cluster: "{{ item.vmware_guest_cluster }}"
-    folder: "{{ item.vmware_guest_folder }}"
-    name: "{{ item.vmware_guest_name | default( item.inventory_hostname) }}"
-    template: "{{ item.vmware_guest_template }}"
-    guest_id: "{{ item.vmware_guest_guest_id | default(omit) }}"
-    state: powered-on
-    disk:
-      - datastore: "{{ item.vmware_guest_datastore }}"
-        size_gb: "{{ item.vmware_guest_disk_size_gb }}"
-    hardware:
-      memory_mb: "{{ item.vmware_guest_memory_mb }}"
-      num_cpus: "{{ item.vmware_guest_num_cpus }}"
-    customization:
-      dns_servers: "{{ item.vmware_guest_dns_servers | default(omit) }}"
-      domain: "{{ item.vmware_guest_domain | default(omit) }}"
-      timezone: "{{ item.vmware_guest_timezone | default(omit) }}"
-    networks:
-      - name: "{{ item.vmware_guest_network_name }}"
-        netmask: "{{ item.vmware_guest_network_netmask }}"
-        gateway: "{{ item.vmware_guest_network_gateway }}"
-        ip: "{{ item.ansible_host }}"
-    vapp_properties:
-      - id: instance-id
-        value: "{{ item.inventory_hostname }}"
-      - id: hostname
-        value: "{{ item.inventory_hostname }}"
-      - id: "user-data"
-        value: "{{ lookup('file', item.vmware_guest_cloudinit_userdata_file) | b64encode }}"
-
-  loop: "{{ query('inventory_hostnames', 'vmware_guest') | map ('extract', hostvars) | list }}"
-  loop_control:
-    label: "{{ item.inventory_hostname }}"
+- name: Clean up temporary cloudinit files
+  ansible.builtin.file:
+    path: "{{ virtual_guest_cloudinit_cache_path }}"
+    state: absent
