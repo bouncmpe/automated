@@ -3,7 +3,7 @@
     path: "{{ virtual_guest_cloudinit_cache_path }}/{{ guest.inventory_hostname }}"
     state: directory
 
-- name: Render cloud-init network-config template
+- name: Set cloud-init user-data file path
   ansible.builtin.set_fact:
     virtual_guest_cloudinit_user_data_file: "{{ virtual_guest_cloudinit_cache_path }}/{{ guest.inventory_hostname }}/user-data.yml"
 
@@ -12,7 +12,7 @@
     src: "{{ virtual_guest_cloudinit_user_data_template }}"
     dest: "{{ virtual_guest_cloudinit_user_data_file }}"
 
-- name: Render cloud-init network-config template
+- name: Set cloud-init network-config file path
   ansible.builtin.set_fact:
     virtual_guest_cloudinit_network_config_file: "{{ virtual_guest_cloudinit_cache_path }}/{{ guest.inventory_hostname }}/network-config.yml"
 
@@ -44,13 +44,13 @@
       memory_mb: "{{ guest.virtual_guest_memory_mb }}"
       num_cpus: "{{ guest.virtual_guest_num_cpus }}"
     customization:
-      dns_servers: "{{ guest.virtual_guest_dns_servers | default(omit) }}"
+      dns_servers: "{{ guest.virtual_guest_nameservers | default(omit) }}"
       domain: "{{ guest.virtual_guest_domain | default(omit) }}"
       timezone: "{{ guest.virtual_guest_timezone | default(omit) }}"
     networks:
-      - name: "{{ guest.vmware_guest_network_name }}"
-        netmask: "{{ guest.vmware_guest_network_netmask }}"
-        gateway: "{{ guest.vmware_guest_network_gateway }}"
+      - name: "{{ guest.virtual_guest_network_name }}"
+        netmask: "{{ guest.virtual_guest_network_netmask }}"
+        gateway: "{{ guest.virtual_guest_network_gateway }}"
         ip: "{{ guest.ansible_host }}"
     vapp_properties:
       - id: instance-id
