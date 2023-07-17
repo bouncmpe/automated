@@ -9,6 +9,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install \
     sudo \
     git \
+    make \
     tar curl wget zip unzip gnupg2 \
     python3-pip \
     openssh-client openssh-server \
@@ -27,6 +28,6 @@ USER bouncmpe
 WORKDIR /home/bouncmpe
 
 RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install --user ansible ansible-lint
+RUN python3 -m pip install --user ansible ansible-lint requests PyVmomi jmespath
 RUN python3 -m pip install --upgrade git+https://github.com/vmware/vsphere-automation-sdk-python.git
 ENV PATH=/home/bouncmpe/.local/bin:$PATH
