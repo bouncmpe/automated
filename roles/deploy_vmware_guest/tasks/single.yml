@@ -21,14 +21,14 @@
     src: "{{ virtual_guest_cloudinit_network_config_template }}"
     dest: "{{ virtual_guest_cloudinit_network_config_file }}"
 
-- name: Ensure all specified VM folders are present
+- name: Ensure the VM folder are present
   community.vmware.vcenter_folder:
     datacenter_name: "{{ guest.vmware_guest_datacenter }}"
     folder_name: "{{ guest.vmware_guest_folder }}"
     folder_type: vm
     state: present
 
-- name: Deploy all specified virtual machines
+- name: Deploy a virtual machine
   community.vmware.vmware_guest:
     datacenter: "{{ guest.vmware_guest_datacenter }}"
     cluster: "{{ guest.vmware_guest_cluster }}"
