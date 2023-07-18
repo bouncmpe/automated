@@ -1,13 +1,10 @@
 #cloud-config
 hostname: {{ guest.inventory_hostname }}
 timezone: {{ guest.virtual_guest_timezone | default(virtual_guest_timezone) }}
-ssh_pwauth: false
+ssh_pwauth: {{ guest.virtual_guest_ssh_pwauth | default(false) }}
 
 package_update: true
-packages:
-  - sudo
-  - git
-  - ssh-import-id
+packages: {{ guest.virtual_guest_packages | default(virtual_guest_packages) }}
   
 users:
   - default
@@ -16,27 +13,13 @@ users:
     lock_passwd: true
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
-    ssh_import_id:
-      - gh:doganulus
+    ssh_import_id: {{ guest.virtual_guest_ansible_ssh_import_id | default([]) }}
 
 system_info:
   default_user:
     name: bouncmpe
     passwd: $6$bubk9lLYlmugZF03$YTOTIlm2r8miU0uMvn1/xXcSeI02G./wxvpcSDAJdI4GfwV6CppEw20DSAU4x7y7dEzM7evWdAb6ON6SAMKlw0 #changethis
     shell: /bin/bash
-    groups:
-      [
-        adm,
-        audio,
-        cdrom,
-        dialout,
-        dip,
-        floppy,
-        lxd,
-        netdev,
-        plugdev,
-        sudo,
-        video,
-      ]
+    groups: [sudo]
     sudo: ALL=(ALL) ALL
     lock_passwd: false
