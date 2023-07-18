@@ -1,0 +1,9 @@
+---
+- name: Setup user quotas
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Call the role
+      ansible.builtin.include_role:
+        name: bouncmpe.automated.setup_quotas
