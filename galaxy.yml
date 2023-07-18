@@ -2,7 +2,7 @@ namespace: bouncmpe
 name: automated
 description: ""
 repository: "https://github.com/bouncmpe/automated"
-version: 0.15.0
+version: 0.16.0
 readme: README.md
 authors:
   - Dogan Ulus <dogan.ulus@boun.edu.tr>
