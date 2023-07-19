@@ -13,11 +13,13 @@
     groups: "{{ user.groups | default(omit) }}"
     comment: "{{user.gecos | default(omit) }}"
     password_lock: "{{ user.lock_passwd | default(true) }}"
+    create_home: "{{user.create_home | default(automated_config_users_create_home) }}" 
+    uid: "{{ user.uid | default(omit) }}"
     password: "{{ user.passwd | default(omit) }}"
     generate_ssh_key: true
-    ssh_key_type: "ed25519"
-    ssh_key_file: ".ssh/id_ed25519"
-    shell: /bin/bash
+    ssh_key_type: "{{ user.ssh_key_type | default('ed25519') }}"
+    ssh_key_file: "{{ user.ssh_key_type | default('.ssh/id_ed25519') }}" 
+    shell: "{{ user.shell | default('/bin/bash') }}"  
     system: "{{ user.system | default(false) }}"
     update_password: "on_create"
 
