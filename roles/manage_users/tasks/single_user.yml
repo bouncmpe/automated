@@ -29,7 +29,7 @@
     key: https://github.com/{{ github_id }}.keys
     state: "{{ user.state | default(omit) }}"
   loop: "{{ user.ssh_import_id | map('regex_replace', '^gh:(.*)$', '\\1') | list }}"
-  when: user.ssh_import_id is defined
+  when: user.ssh_import_id is defined and automated_config_users_create_home
   loop_control:
     loop_var: github_id
 
@@ -38,7 +38,7 @@
     user: "{{ user.name }}"
     key: "{{ user.ssh_authorized_keys }}"
     state: "{{ user.state | default(omit) }}"
-  when: user.ssh_authorized_keys is defined
+  when: user.ssh_authorized_keys is defined and automated_config_users_create_home
 
 - name: Manage sudoers
   community.general.sudoers:
