@@ -44,8 +44,14 @@
   community.general.sudoers:
     name: "{{ user.name | replace('.', '-') }}" # sudoers.d filename must be dot-free
     user: "{{ user.name }}"
-    state: "{{ user.state | default(omit) }}"
+    state: present
     commands: "{{ user.sudoers.commands | default('ALL') }}"
     nopassword: "{{ user.sudoers.nopassword | default(omit) }}"
     runas: "{{ user.sudoers.runas | default(omit) }}"
   when: user.sudoers is defined
+
+- name: Manage sudoers when absent
+  community.general.sudoers:
+    name: "{{ user.name | replace('.', '-') }}" # sudoers.d filename must be dot-free
+    state: absent
+  when: user.sudoers is undefined or user.state == 'absent'
