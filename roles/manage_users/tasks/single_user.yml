@@ -54,4 +54,4 @@
   community.general.sudoers:
     name: "{{ user.name | replace('.', '-') }}" # sudoers.d filename must be dot-free
     state: absent
-  when: user.sudoers is undefined or user.state == 'absent'
+  when: user.sudoers is undefined or (user.state is defined and user.state == 'absent')
