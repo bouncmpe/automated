@@ -13,7 +13,7 @@ users:
     lock_passwd: true
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
-    ssh_import_id: {{ guest.virtual_guest_ansible_ssh_import_id | default([]) }}
+    ssh_import_id: {{ guest.virtual_guest_ansible_ssh_import_id | default(virtual_guest_ansible_ssh_import_id) }}
 
 system_info:
   default_user:
